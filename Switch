@@ -1,0 +1,53 @@
+// Algoritmos.cpp
+// Autor: Santiago Rodriguez
+// Fecha: 22/02/17
+
+
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+
+using namespace std;
+
+void main(){
+ float a,b,area;
+ int x;
+ cout<<"*****--MENU--*****"<<endl;
+ cout<<"1) Area Triangulo"<<endl;
+ cout<<"2) Area Rectangulo"<<endl;
+ cout<<"3) Area Cuadrado"<<endl;
+ cout<<"4) Salir"<<endl;
+ cout<<"Opcion: ";
+ cin>>x;
+ switch(x){
+ case 1: {
+	 cout<<"Base del triangulo: ";
+	 cin>>a;
+	 cout<<"Altura del triangulo: ";
+	 cin>>b;
+	 area=(b*a)/2;
+	 cout<<"El area del triaugnlo es: "<<area;  
+	 break;}
+ case 2: {
+	 cout<<"Base del rectangulo: ";
+	 cin>>a;
+	 cout<<"Altura del rectangulo: ";
+	 cin>>b;
+	 area=b*a;
+	 cout<<"El area del rectangulo es: "<<area;
+	 break;}
+ case 3: {
+	 cout<<"Lados del cuadrado: ";
+	 cin>>a;
+	 area=a*a;
+	 cout<<"El area del cuadrado es: "<<area;
+	 break;}
+ case 0: {
+	 cout<<"Hasta luego";
+	 break;}
+ default: {
+	 cout<<"ERROR";
+	 break;}
+ }
+ getch();
+}
