@@ -1,0 +1,32 @@
+// Algoritmos.cpp
+// Autor: Santiago Rodriguez
+// Fecha: 22/02/17
+
+
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+
+using namespace std;
+
+void main(){
+ int edad,genero,n;
+ cout<<"Ingrese su edad: ";
+ cin>>edad;
+ cout<<"Ingrese su genero: 1)Masculino o 2)Femenino"<<endl;
+ cin>>genero;
+ cout<<"Ingrese la cantidad de hijos: ";
+ cin>>n;
+ if(genero==1)
+   if(edad>=65)  
+      cout<<"Se puede jubilar";
+   else
+		cout<<"No se puede jubilar";
+   
+ else
+   if(edad>=(60-n))
+	   cout<<"Se puede jubilar";
+   else
+	   cout<<"No se puede jubilar";
+ getch();
+}
