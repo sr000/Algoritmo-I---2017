@@ -15,8 +15,6 @@ void main(){
  cin>>edad;
  cout<<"Ingrese su genero: 1)Masculino o 2)Femenino"<<endl;
  cin>>genero;
- cout<<"Ingrese la cantidad de hijos: ";
- cin>>n;
  if(genero==1)
    if(edad>=65)  
       cout<<"Se puede jubilar";
@@ -24,6 +22,8 @@ void main(){
 		cout<<"No se puede jubilar";
    
  else
+   cout<<"Ingrese la cantidad de hijos: ";
+   cin>>n;
    if(edad>=(60-n))
 	   cout<<"Se puede jubilar";
    else
