@@ -1,0 +1,533 @@
+//BuscadorDeHospitales consiste en ubicar los hospitales mas cercano al area que se encuentra la persona.
+//El programa incluye Hospitales y Centros de Salud desde el centro hasta el 4to Anillo.
+
+#include <iostream>
+#include "conio.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
+
+using namespace std;
+#define max 100
+
+//Estructuras de los archivos.
+
+struct hospitales{
+	int registro;
+	int telefono;
+	char hospital[100];
+};
+
+struct centrosdesalud{
+	int registro;
+	int telefono;
+	char centrodesalud[max];
+};
+
+struct avenidas{
+int registro;
+char avenida[max];
+};
+
+struct anillos{
+int registro;
+char anillo[max];
+};
+
+
+//Funciones de Cargar
+
+void cargarhospitales(){
+	FILE *ptr;
+	hospitales reg;
+	ptr = fopen("hospital.dat", "ab");
+	cout << "Nombre del hospital: ";
+	do{
+		gets(reg.hospital);
+	} while (strlen(reg.hospital) == 0);
+	cout << "Numero de telefono: ";
+	cin >> reg.telefono;
+	cout << "Registro: ";
+	cin >> reg.registro;
+	fwrite(&reg, sizeof(reg), 1, ptr);
+	fclose(ptr);
+}
+
+void cargarcentrodesalud(){
+	FILE *ptr;
+	centrosdesalud reg;
+	ptr = fopen("centrodesalud.dat", "ab");
+	cout << "Nombre del centro: ";
+	do{
+		gets(reg.centrodesalud);
+	} while (strlen(reg.centrodesalud) == 0);
+	cout << "Numero de telefono: ";
+	cin >> reg.telefono;
+	cout << "Registro: ";
+	cin >> reg.registro;
+	fwrite(&reg, sizeof(reg), 1, ptr);
+	fclose(ptr);
+} 
+
+void cargaranillos(){
+	FILE *ptr;
+	anillos reg;
+	ptr = fopen("anillos.dat", "ab");
+	int a;
+	cin >> a;
+	do{
+		cout << "Anillo: ";
+		do{
+			gets(reg.anillo);
+		} while (strlen(reg.anillo) == 0);
+		cout << "registro: ";
+		cin >> reg.registro;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cin >> a;
+	} while (a == 1);
+	fclose(ptr);
+}
+
+void cargaravenidas(){
+	FILE *ptr;
+	avenidas reg;
+	ptr = fopen("avenida.dat", "ab");
+	int a;
+	cin >> a;
+	do{
+		cout << "Avenida: ";
+		do{
+			gets(reg.avenida);
+		} while (strlen(reg.avenida) == 0);
+		cout << "registro: ";
+		cin >> reg.registro;
+		fwrite(&reg, sizeof(reg), 1, ptr);
+		cin >> a;
+	} while (a == 1);
+	fclose(ptr);
+}
+
+//Funciones Para Mostrar
+
+void mostraranillos(){
+	FILE *ptr;
+	anillos reg;
+	ptr = fopen("anillos.dat", "rb");
+	cout << "***********Anillos*********" << endl;
+	cout << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			cout << reg.anillo << endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+		fclose(ptr);
+	}
+}
+
+void mostraravenidas(int opcion){
+	FILE *ptr;
+	avenidas reg;
+	ptr = fopen("avenida.dat", "rb");
+	cout << "**************Avenidas*********" << endl;
+	cout << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+			if (opcion == 1 || opcion == 2){
+				for (int i = 0; i < 14; i++){
+					cout << i + 1 << ") " << reg.avenida << endl;
+					fread(&reg, sizeof(reg), 1, ptr);
+				}
+			}
+			else{
+				if (opcion == 3 || opcion == 4){
+					fseek(ptr, 12*sizeof(reg), SEEK_SET);
+					fread(&reg, sizeof(reg), 1, ptr);
+					for (int i = 0; i < 20; i++){
+						cout << i + 1 << ") " << reg.avenida << endl;
+						fread(&reg, sizeof(reg), 1, ptr);
+					}
+				   }
+				else{
+					fseek(ptr, 13*sizeof(reg), SEEK_SET);
+					fread(&reg, sizeof(reg), 1, ptr);
+					for (int i = 0; i < 26; i++){
+						cout << i + 1 << ") " << reg.avenida << endl;
+						fread(&reg, sizeof(reg), 1, ptr);
+					}
+				}
+				}
+		fclose(ptr);
+	   }
+   }
+
+int busqueda(){
+	int num;
+	int opcion;
+	int opcion1;
+	int opcion2;
+	FILE *ptr;
+	FILE *ptr1;
+	anillos reg1;
+	avenidas reg;
+	ptr1 = fopen("anillos.dat", "rb");
+	ptr = fopen("avenida.dat", "rb");
+	cout << "Entre que anillo se encuentra: " << endl;
+	do{
+		cout << "1)Centro" << endl;
+		cout << "2)1er y 2do Anilo" << endl;
+		cout << "3)2do y 3er Anillo Interno" << endl;
+		cout << "4)3er y 3er Anillo Externo" << endl;
+		cout << "5)3er Anillo Externo y 4to Anillo" << endl;
+		cout << "Opcion: ";
+		cin >> opcion;
+	} while (opcion<1 || opcion>5);
+	if (ptr1 != NULL){
+		fread(&reg1, sizeof(reg1), 1, ptr1);
+		while (feof(ptr1) == false){
+			if (opcion == reg1.registro){
+				num = reg1.registro;
+			}
+			fread(&reg1, sizeof(reg1), 1, ptr1);
+		}
+		fclose(ptr1);
+	}
+	cout << endl;
+	mostraravenidas(opcion);
+	cout << "Seleccione entre que avenidas se encuentra: " << endl;
+	cout << "Avenida 1: ";
+	cin >> opcion1;
+	cout << "Avenida 2: ";
+	cin >> opcion2;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			if (opcion1 == reg.registro){
+				num = num + reg.registro;
+				fread(&reg, sizeof(reg), 1, ptr);
+
+			}
+			else{
+				if (opcion2 == reg.registro){
+					num = num + reg.registro;
+					fread(&reg, sizeof(reg), 1, ptr);
+				}
+			}
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+		fclose(ptr);
+	}
+	return(num);
+}
+
+
+//Funciones para 1)Hospital
+
+void mostrarhospitalesgeneral()
+{
+	FILE *ptr;
+	ptr = fopen("hospital.dat", "rb");
+	hospitales reg;
+	cout << "***********Hospitales****************" << endl;
+	cout << "Hospital               Telefono" << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			cout << reg.hospital << "              " << reg.telefono << endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+		fclose(ptr);
+	}
+}
+
+void mostrarhospital(int num){
+	FILE *ptr;
+	hospitales reg;
+	ptr = fopen("hospital.dat", "rb");
+	cout << "*******************Hospitales*****************************" << endl;
+	cout << "Hospital                             Telefono" << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			if (num == reg.registro){
+				cout << reg.hospital << "               " << reg.telefono << endl;
+				fread(&reg, sizeof(reg), 1, ptr);
+			}
+		}
+	}
+}
+
+void buscadorhospital(){
+	int num;
+	num = busqueda();
+	mostrarhospital(num);
+}
+
+void encontrarhospitales(){
+	cout << endl;
+	cout << "****************Lista Hospitales*****************" << endl;
+	cout << "*" << endl;
+	cout << "*" << endl;
+	cout << "Elija la opcion que quisiera.-" << endl;
+	cout << "1)Mostrar la lista de todos los Hospitales en Santa Cruz" << endl;
+	cout << "2)Mostrar los hospitales mas cercanos" << endl;
+	cout << "0)Salir" << endl;
+	int x;
+	cout << "Opcion: ";
+	cin >> x;
+	do{
+		switch (x){
+		case 1:{
+				   cout << endl;
+				   mostrarhospitalesgeneral();
+		}break;
+		case 2:{
+				   buscadorhospital();
+		}break;
+		case 0:{
+
+		}break;
+		default:
+		{
+				   cout << "Elija una opcion valida" << endl;
+				   cout << "Opcion: " << endl;
+				   cin >> x;
+		}
+		}
+	} while (x > 2 || x < 0);
+	cout << endl;
+}
+
+//Funciones para 2) Centros de Salud
+
+void mostrarcentrosdesalud()
+{
+	FILE *ptr;
+	ptr = fopen("centrodesalud.dat", "rb");
+	centrosdesalud reg;
+	cout << "***********Centro de Salud****************" << endl;
+	cout << "Centro de Salud                  Telefono" << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			cout << reg.centrodesalud << "              " << reg.telefono << endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+		fclose(ptr);
+	}
+}
+
+void mostrarcentro(int num){
+	FILE *ptr;
+	centrosdesalud reg;
+	ptr = fopen("centrodesalud.dat", "rb");
+	cout << "*******************Centros de Salud*****************************" << endl;
+	cout << "Centro de Salud                             Telefono" << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			if (num == reg.registro){
+				cout << reg.centrodesalud << "               " << reg.telefono << endl;
+				fread(&reg, sizeof(reg), 1, ptr);
+			}
+		}
+	}
+}
+
+void buscadorcentro(){
+	int num;
+	num = busqueda();
+	mostrarcentro(num);
+}
+
+void encontrarcentrodesalud(){
+	cout << endl;
+	cout << "****************Lista Centros de Salud*****************" << endl;
+	cout << "*" << endl;
+	cout << "*" << endl;
+	cout << "Elija la opcion que quisiera.-" << endl;
+	cout << "1)Mostrar la lista de todos los Centros de Salud en Santa Cruz" << endl;
+	cout << "2)Mostrar los Centros de Salud mas cercanos" << endl;
+	cout << "0)Salir" << endl;
+	int x;
+	cout << "Opcion: ";
+	cin >> x;
+	do{
+		switch (x){
+		case 1:{
+				   cout << endl;
+				   mostrarcentrosdesalud();
+		}break;
+		case 2:{
+				   buscadorcentro();
+		}break;
+		case 0:{
+
+		}break;
+		default:
+		{
+				   cout << "Elija una opcion valida" << endl;
+				   cout << "Opcion: " << endl;
+				   cin >> x;
+		}
+		}
+	} while (x > 2 || x < 0);
+	cout << endl;
+
+}
+//Funciones para 3)General
+
+void mostrarhospitalescentrosdesalud(){
+	FILE *ptr;
+	ptr = fopen("hospital.dat", "rb");
+	hospitales reg;
+	cout << "***********Hospitales Y Centros de Salud****************" << endl;
+	cout << "Centro de Salud                  Telefono" << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			cout << reg.hospital << "              " << reg.telefono << endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+		fclose(ptr);
+	}
+	FILE *ptr1;
+	ptr1 = fopen("centrodesalud.dat", "rb");
+	centrosdesalud reg1;
+	if (ptr1 != NULL){
+		fread(&reg1, sizeof(reg1), 1, ptr1);
+		while (feof(ptr1) == false){
+			cout << reg1.centrodesalud << "            " << reg1.telefono << endl;
+			fread(&reg, sizeof(reg), 1, ptr);
+		}
+		fclose(ptr1);
+	}
+}
+
+void mostrarhospitalescentrosdesaludbusqueda(int num){
+	FILE *ptr;
+	ptr = fopen("hospital.dat", "rb");
+	hospitales reg;
+	cout << "***********Hospitales Y Centros de Salud****************" << endl;
+	cout << "Centro de Salud                  Telefono" << endl;
+	if (ptr != NULL){
+		fread(&reg, sizeof(reg), 1, ptr);
+		while (feof(ptr) == false){
+			if (num == reg.registro){
+				cout << reg.hospital << "              " << reg.telefono << endl;
+				fread(&reg, sizeof(reg), 1, ptr);
+			}
+		}
+		fclose(ptr);
+	}
+	FILE *ptr1;
+	ptr1 = fopen("centrodesalud.dat", "rb");
+	centrosdesalud reg1;
+	if (ptr1 != NULL){
+		fread(&reg1, sizeof(reg1), 1, ptr1);
+		while (feof(ptr1) == false){
+			if (num == reg1.registro){
+				cout << reg1.centrodesalud << "            " << reg1.telefono << endl;
+				fread(&reg1, sizeof(reg1), 1, ptr);
+			}		
+		}
+		fclose(ptr1);
+	}
+}
+
+void buscadorgeneral(){
+	int num;
+	num = busqueda();
+	mostrarhospitalescentrosdesaludbusqueda(num);
+}
+
+void encontrargeneral(){
+	cout << endl;
+	cout << "****************Lista General*****************" << endl;
+	cout << "*" << endl;
+	cout << "*" << endl;
+	cout << "Elija la opcion que quisiera.-" << endl;
+	cout << "1)Mostrar la lista de todos los Hospitales y Centros de Salud en Santa Cruz" << endl;
+	cout << "2)Mostrar los hospitales y Centros de Salud mas cercanos" << endl;
+	cout << "0)Salir" << endl;
+	int x;
+	cout << "Opcion: ";
+	cin >> x;
+	do{
+		switch (x){
+		case 1:{
+				   cout << endl;
+				   mostrarhospitalescentrosdesalud();
+		}break;
+		case 2:{
+				   buscadorgeneral();
+		}break;
+		case 0:{
+
+		}break;
+		default:
+		{
+				   cout << "Elija una opcion valida" << endl;
+				   cout << "Opcion: " << endl;
+				   cin >> x;
+		}
+		}
+	} while (x > 2 || x < 0);
+	cout << endl;
+}
+
+
+	
+
+void main(){
+//Para cargar los archivos
+	cargarhospitales();
+	cargaranillos();
+	cargaravenidas();
+	cargarcentrodesalud();
+//Inicio del Programa
+	char respuesta;
+	int x;
+	cout << "*******************Bienvenido al buscador de Hospitales y Centros de Salud******************" << endl;
+	cout << "*                                        *                                                 *" << endl;
+	cout << "*                                         *                                                *" << endl;
+	cout << "*                                          *                                               *" << endl;
+	cout << endl;
+	do{
+	   cout << "****Que Desea encontra****" <<endl ;
+	   cout << "1) Hospital" << endl;
+	   cout << "2) Centros de Salud" << endl;
+	   cout << "3)General" << endl;
+	   cout << "0)Salir" << endl;
+	   cout << "Opcion: ";
+	   cin >> x;
+		do{
+			switch (x){
+			case 1: {
+						encontrarhospitales();
+			}break;
+			case 2: {
+						encontrarcentrodesalud();
+			}break;
+			case 3:
+			{
+				encontrargeneral();
+			}break;
+			case 0:{
+			}break;
+			default: {
+						 cout << "Elija una opcion valida" << endl;
+						 cout << "Opcion: ";
+						 cin >> x;
+			}break;
+			}
+		} while (x > 3 || x < 0);
+		if (x != 0){
+			cout << "Desea realizar otra busquedad? (S/N): ";
+			cin >> respuesta;
+			cout << endl;
+		}
+	} while (respuesta == 83 || respuesta == 115);
+	cout << "Gracias por usar el programa" << endl;
+	_getch();
+}
